@@ -13,9 +13,16 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.os.Process;
 
+import de.greenrobot.event.EventBus;
+
+
+/**
+ * Created by Diaconu Madalina on 12.10.2016.
+ */
 public class ARFFRecorderService extends Service  implements SensorEventListener {
 
     private SensorManager sensorManager;
+    private static boolean isOn = false;
 
     public ARFFRecorderService() {
     }
@@ -36,11 +43,13 @@ public class ARFFRecorderService extends Service  implements SensorEventListener
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("zzz", "MyService Started.");
         //If service is killed while starting, it restarts.
+        isOn = true;
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
+        isOn = false;
         sensorManager.unregisterListener(this);
 
         Log.d("zzz", "MyService is Completed or stopped.");
@@ -61,22 +70,20 @@ public class ARFFRecorderService extends Service  implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
-
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
-
-            Log.d("ZZZ","x="+x);
-            Log.d("ZZZ","y="+y);
-            Log.d("ZZZ","z="+z);
-            Log.d("ZZZ","-----------------");
+        Sensor sensor = event.sensor;
+        if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            EventBus.getDefault().post(
+                    new AccelerometerInfo(
+                            event.values[0],
+                            event.values[1],
+                            event.values[2]));
 
             //TODO Write values in a file
-
-            //TODO Notify activity
         }
+    }
+
+    public static boolean isOn() {
+        return isOn;
     }
 
     @Override
