@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ARFFRecorder</string>
     <string name="action_settings">Settings</string>
+    <string name="app_title">Accelerometer Info</string>
+    <string name="x_coordinate_initial_value">x = 0</string>
+    <string name="y_coordinate_initial_value">y = 0</string>
+    <string name="z_coordinate_initial_value">z = 0</string>
 </resources>
