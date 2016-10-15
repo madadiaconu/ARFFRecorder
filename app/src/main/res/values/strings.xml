@@ -5,4 +5,5 @@
     <string name="x_coordinate_initial_value">x = 0</string>
     <string name="y_coordinate_initial_value">y = 0</string>
     <string name="z_coordinate_initial_value">z = 0</string>
+    <string name="notification_title">Accelerometer data changed!</string>
 </resources>

@@ -1,71 +1,57 @@
 package com.madalinadiaconu.arffrecorder;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.os.Process;
 
 import de.greenrobot.event.EventBus;
 
 
 /**
  * Created by Diaconu Madalina on 12.10.2016.
+ * Service used to listening for accelerometer changes
  */
-public class ARFFRecorderService extends Service  implements SensorEventListener {
+public class ARFFRecorderService extends IntentService implements SensorEventListener {
 
     private SensorManager sensorManager;
     private static boolean isOn = false;
 
-    public ARFFRecorderService() {
+    public ARFFRecorderService(){
+        super(null);
+    }
+
+    public ARFFRecorderService(String name) {
+        super(name);
     }
 
     @Override
     public void onCreate() {
-        HandlerThread handlerthread = new HandlerThread("MyThread", Process.THREAD_PRIORITY_BACKGROUND);
-        handlerthread.start();
-
         sensorManager  = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("zzz", "MyService Started.");
-        //If service is killed while starting, it restarts.
         isOn = true;
-        return START_STICKY;
+        return START_STICKY;         //If service is killed while starting, it restarts.
     }
 
     @Override
     public void onDestroy() {
         isOn = false;
         sensorManager.unregisterListener(this);
-
-        Log.d("zzz", "MyService is Completed or stopped.");
         super.onDestroy();
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    protected void onHandleIntent(Intent intent) {
 
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        return super.onUnbind(intent);
     }
 
     @Override

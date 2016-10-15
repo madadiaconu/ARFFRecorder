@@ -54,12 +54,15 @@ public class ARFFRecorderActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+        NotificationHandler.unregisterToAccelerometerChanges();
+        NotificationHandler.removeNotification();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
+        NotificationHandler.registerToAccelerometerChanges();
     }
 
     public void onEvent(AccelerometerInfo event){

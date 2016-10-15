@@ -2,6 +2,7 @@ package com.madalinadiaconu.arffrecorder;
 
 /**
  * Created by Diaconu Madalina on 13.10.2016.
+ * Class holding the data provided by the accelerometer
  */
 public class AccelerometerInfo {
 
@@ -25,5 +26,10 @@ public class AccelerometerInfo {
 
     public double getZ() {
         return z;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[ x = %.2f, y = %.2f, z = %.2f ]", x, y, z);
     }
 }
