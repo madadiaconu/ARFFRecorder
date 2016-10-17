@@ -43,8 +43,10 @@ public class ARFFRecorderActivity extends AppCompatActivity{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     startService(serviceIntent);
+                    ARFFFileWriter.getInstance().startRecording();
                 } else {
                     stopService(serviceIntent);
+                    ARFFFileWriter.getInstance().stopRecording();
                 }
             }
         });

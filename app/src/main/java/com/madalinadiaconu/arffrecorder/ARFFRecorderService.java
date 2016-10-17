@@ -62,9 +62,8 @@ public class ARFFRecorderService extends IntentService implements SensorEventLis
                     new AccelerometerInfo(
                             event.values[0],
                             event.values[1],
-                            event.values[2]));
-
-            //TODO Write values in a file
+                            event.values[2],
+                            System.currentTimeMillis()));
         }
     }
 

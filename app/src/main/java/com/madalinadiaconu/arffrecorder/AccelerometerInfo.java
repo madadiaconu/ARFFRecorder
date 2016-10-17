@@ -6,14 +6,16 @@ package com.madalinadiaconu.arffrecorder;
  */
 public class AccelerometerInfo {
 
+    private long timestamp;
     private double x;
     private double y;
     private double z;
 
-    public AccelerometerInfo(double x, double y, double z) {
+    public AccelerometerInfo(double x, double y, double z, long timestamp) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.timestamp = timestamp;
     }
 
     public double getX() {
@@ -26,6 +28,10 @@ public class AccelerometerInfo {
 
     public double getZ() {
         return z;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 
     @Override
