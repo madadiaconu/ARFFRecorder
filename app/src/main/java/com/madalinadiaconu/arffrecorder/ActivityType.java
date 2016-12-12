@@ -8,5 +8,6 @@ package com.madalinadiaconu.arffrecorder;
 public enum ActivityType {
     WALKING,
     SITTING,
-    STANDING
+    STANDING,
+    UNKNOWN
 }

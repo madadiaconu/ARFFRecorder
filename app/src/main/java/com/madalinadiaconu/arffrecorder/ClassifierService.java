@@ -70,7 +70,9 @@ public class ClassifierService extends IntentService implements SensorEventListe
                 event.values[2],
                 System.currentTimeMillis());
         if (slidingWindows.getFirst().isFull()) {
-            classifyInstance(extractFeatures(slidingWindows.getFirst()));
+            FeatureVector featureVector = FeatureExtractor.getInstance().extractFeatures(slidingWindows.getFirst());
+            ActivityType activityType = WekaClassifier.getInstance().classify(featureVector);
+            EventBus.getDefault().post(activityType);
             slidingWindows.removeFirst();
         }
         if ((accelerometerInfo.getTimestamp() - slidingWindows.getLast().getLastTimestamp()) >= jumpSize) {
@@ -79,14 +81,6 @@ public class ClassifierService extends IntentService implements SensorEventListe
         for (SlidingWindow slidingWindow: slidingWindows) {
             slidingWindow.addAcceletometerInfo(accelerometerInfo);
         }
-    }
-
-    private void classifyInstance(List<Float> features) {
-
-    }
-
-    private List<Float> extractFeatures(SlidingWindow slidingWindow) {
-        return new ArrayList<>();
     }
 
     public static boolean isOn() {

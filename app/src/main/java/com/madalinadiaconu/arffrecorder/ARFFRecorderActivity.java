@@ -35,17 +35,20 @@ public class ARFFRecorderActivity extends AppCompatActivity{
         zCoordinate = (TextView) findViewById(R.id.z_coordinate);
 
         SwitchCompat switchButton = (SwitchCompat) findViewById(R.id.fab);
-        final Intent serviceIntent = new Intent(ARFFRecorderActivity.this, ARFFRecorderService.class);
+        final Intent recorderServiceIntent = new Intent(ARFFRecorderActivity.this, ARFFRecorderService.class);
+        final Intent classifierServiceIntent = new Intent(ARFFRecorderActivity.this, ClassifierService.class);
 
         switchButton.setChecked(ARFFRecorderService.isOn());
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    startService(serviceIntent);
+                    startService(recorderServiceIntent);
+                    startService(classifierServiceIntent);
                     ARFFFileWriter.getInstance().startRecording();
                 } else {
-                    stopService(serviceIntent);
+                    stopService(recorderServiceIntent);
+                    stopService(classifierServiceIntent);
                     ARFFFileWriter.getInstance().stopRecording();
                 }
             }
@@ -71,5 +74,9 @@ public class ARFFRecorderActivity extends AppCompatActivity{
         xCoordinate.setText(String.format("x = %.2f", event.getX()));
         yCoordinate.setText(String.format("y = %.2f", event.getY()));
         zCoordinate.setText(String.format("z = %.2f", event.getZ()));
+    }
+
+    public void onEvent(ActivityType activityType) {
+        //send info to the client
     }
 }
