@@ -2,7 +2,9 @@ package com.madalinadiaconu.arffrecorder;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Environment;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 
 import weka.classifiers.trees.J48;
 import weka.core.Instance;
@@ -27,13 +30,16 @@ public class WekaClassifier {
     private Instances trainingData;
 
     private WekaClassifier() {
-        File root = Environment.getExternalStorageDirectory();
-        File infile = new File(root, "training_dataset.arff");
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader(infile));
+            reader = new BufferedReader(
+                    new InputStreamReader(
+                            App.getAppContext().
+                                    getAssets().
+                                    open("training_dataset.arff")));
             trainingData = new Instances(reader);
             reader.close();
+            Log.d("zzz","training data? "+trainingData.toString());
             if (trainingData.classIndex() == -1)
                 trainingData.setClassIndex(trainingData.numAttributes() - 1);
             String[] options = new String[]{"-U"};
