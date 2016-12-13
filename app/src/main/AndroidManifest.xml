@@ -26,6 +26,10 @@
             android:name=".ARFFRecorderService"
             android:enabled="true"
             android:exported="false"/>
+
+        <service android:name=".ClassifierService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

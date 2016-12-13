@@ -18,17 +18,29 @@ public class SlidingWindow {
     }
 
     public void addAcceletometerInfo(AccelerometerInfo accelerometerInfo) {
-        if (!isFull()) {
+        try {
+            if (!isFull()) {
+                this.data.add(accelerometerInfo);
+            }
+        } catch (NoDataAvailableException ex) {
             this.data.add(accelerometerInfo);
         }
     }
 
-    public boolean isFull() {
-        return ((data.getLast().getTimestamp() - data.getFirst().getTimestamp()) >= size);
+    public boolean passedSize (int s) throws NoDataAvailableException {
+        if (data.size() > 0)
+            return (data.getLast().getTimestamp() - data.getFirst().getTimestamp()) >= s;
+        throw new NoDataAvailableException();
     }
 
-    public long getLastTimestamp() {
-        return data.getLast().getTimestamp();
+    public boolean isFull() throws NoDataAvailableException {
+        return passedSize(size);
+    }
+
+    public long getLastTimestamp() throws NoDataAvailableException {
+        if (data.size() > 0)
+            return data.getLast().getTimestamp();
+        throw new NoDataAvailableException();
     }
 
     public LinkedList<AccelerometerInfo> getData() {

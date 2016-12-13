@@ -8,9 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -42,6 +40,7 @@ public class ClassifierService extends IntentService implements SensorEventListe
         slidingWindows = new LinkedList<>();
         jumpSize = 500;
         slidingWndowSize = 1000;
+        slidingWindows.add(new SlidingWindow(slidingWndowSize));
         super.onCreate();
     }
 
@@ -69,15 +68,31 @@ public class ClassifierService extends IntentService implements SensorEventListe
                 event.values[1],
                 event.values[2],
                 System.currentTimeMillis());
+        try {
+            handleOverlappingSlidingWindows();
+            handleCompleteSegment();
+        } catch (NoDataAvailableException ex) {
+            ex.printStackTrace();
+        }
+        addInfoToSlidingWindows(accelerometerInfo);
+    }
+
+    private void handleOverlappingSlidingWindows() throws NoDataAvailableException {
+        if (slidingWindows.getLast().passedSize(jumpSize)) {
+            slidingWindows.add(new SlidingWindow(slidingWndowSize));
+        }
+    }
+
+    private void handleCompleteSegment() throws NoDataAvailableException {
         if (slidingWindows.getFirst().isFull()) {
             FeatureVector featureVector = FeatureExtractor.getInstance().extractFeatures(slidingWindows.getFirst());
             ActivityType activityType = WekaClassifier.getInstance().classify(featureVector);
             EventBus.getDefault().post(activityType);
             slidingWindows.removeFirst();
         }
-        if ((accelerometerInfo.getTimestamp() - slidingWindows.getLast().getLastTimestamp()) >= jumpSize) {
-            slidingWindows.add(new SlidingWindow(slidingWndowSize));
-        }
+    }
+
+    private void addInfoToSlidingWindows(AccelerometerInfo accelerometerInfo) {
         for (SlidingWindow slidingWindow: slidingWindows) {
             slidingWindow.addAcceletometerInfo(accelerometerInfo);
         }
