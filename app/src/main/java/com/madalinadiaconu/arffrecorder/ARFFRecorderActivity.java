@@ -17,7 +17,7 @@ import de.greenrobot.event.EventBus;
  */
 public class ARFFRecorderActivity extends AppCompatActivity{
 
-    private TextView xCoordinate, yCoordinate, zCoordinate;
+    private TextView xCoordinate, yCoordinate, zCoordinate, currentActivity;
 
     @Override
     @SuppressWarnings("ConstantConditions")
@@ -33,6 +33,7 @@ public class ARFFRecorderActivity extends AppCompatActivity{
         xCoordinate = (TextView) findViewById(R.id.x_coordinate);
         yCoordinate = (TextView) findViewById(R.id.y_coordinate);
         zCoordinate = (TextView) findViewById(R.id.z_coordinate);
+        currentActivity = (TextView) findViewById(R.id.curr_activity);
 
         SwitchCompat switchButton = (SwitchCompat) findViewById(R.id.fab);
         final Intent recorderServiceIntent = new Intent(ARFFRecorderActivity.this, ARFFRecorderService.class);
@@ -77,6 +78,6 @@ public class ARFFRecorderActivity extends AppCompatActivity{
     }
 
     public void onEvent(ActivityType activityType) {
-        //send info to the client
+        currentActivity.setText(activityType.name());
     }
 }
