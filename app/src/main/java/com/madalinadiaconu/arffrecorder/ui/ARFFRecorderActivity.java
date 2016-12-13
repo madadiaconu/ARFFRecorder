@@ -1,4 +1,4 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +8,14 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import com.madalinadiaconu.arffrecorder.util.ARFFFileWriter;
+import com.madalinadiaconu.arffrecorder.services.ARFFRecorderService;
+import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
+import com.madalinadiaconu.arffrecorder.model.ActivityType;
+import com.madalinadiaconu.arffrecorder.services.ClassifierService;
+import com.madalinadiaconu.arffrecorder.util.NotificationHandler;
+import com.madalinadiaconu.arffrecorder.R;
 
 import de.greenrobot.event.EventBus;
 

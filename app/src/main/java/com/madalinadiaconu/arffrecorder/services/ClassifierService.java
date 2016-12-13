@@ -1,4 +1,4 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.services;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -7,6 +7,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import com.madalinadiaconu.arffrecorder.util.FeatureExtractor;
+import com.madalinadiaconu.arffrecorder.util.NoDataAvailableException;
+import com.madalinadiaconu.arffrecorder.util.WekaClassifier;
+import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
+import com.madalinadiaconu.arffrecorder.model.ActivityType;
+import com.madalinadiaconu.arffrecorder.model.FeatureVector;
+import com.madalinadiaconu.arffrecorder.model.SlidingWindow;
 
 import java.util.LinkedList;
 

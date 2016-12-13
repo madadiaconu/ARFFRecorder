@@ -1,10 +1,15 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.util;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+
+import com.madalinadiaconu.arffrecorder.App;
+import com.madalinadiaconu.arffrecorder.R;
+import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
+import com.madalinadiaconu.arffrecorder.ui.ARFFRecorderActivity;
 
 import de.greenrobot.event.EventBus;
 

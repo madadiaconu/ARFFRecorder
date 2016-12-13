@@ -1,4 +1,4 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.services;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
 
 import de.greenrobot.event.EventBus;
 

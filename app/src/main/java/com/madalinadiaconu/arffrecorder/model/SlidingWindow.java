@@ -1,4 +1,6 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.model;
+
+import com.madalinadiaconu.arffrecorder.util.NoDataAvailableException;
 
 import java.util.LinkedList;
 

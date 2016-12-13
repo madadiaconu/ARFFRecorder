@@ -1,5 +1,6 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.util;
 
+import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
 import com.sromku.simple.storage.SimpleStorage;
 import com.sromku.simple.storage.Storage;
 

@@ -1,9 +1,12 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.madalinadiaconu.arffrecorder.App;
+import com.madalinadiaconu.arffrecorder.model.ActivityType;
+import com.madalinadiaconu.arffrecorder.model.FeatureVector;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

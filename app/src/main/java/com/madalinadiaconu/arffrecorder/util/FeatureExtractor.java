@@ -1,4 +1,8 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.util;
+
+import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
+import com.madalinadiaconu.arffrecorder.model.FeatureVector;
+import com.madalinadiaconu.arffrecorder.model.SlidingWindow;
 
 /**
  * Created by Diaconu Madalina on 11.12.16.

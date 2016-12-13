@@ -1,4 +1,4 @@
-package com.madalinadiaconu.arffrecorder;
+package com.madalinadiaconu.arffrecorder.util;
 
 /**
  * Created by Diaconu Madalina on 17.10.2016.
