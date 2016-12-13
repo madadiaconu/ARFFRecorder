@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.madalinadiaconu.arffrecorder.App;
+import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.ClassLabel;
 import com.madalinadiaconu.arffrecorder.util.ARFFFileWriter;
 import com.madalinadiaconu.arffrecorder.services.ARFFRecorderService;
 import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
@@ -87,5 +89,6 @@ public class ARFFRecorderActivity extends AppCompatActivity{
 
     public void onEvent(ActivityType activityType) {
         currentActivity.setText(activityType.name());
+        App.getCoordinatorClient().setCurrentActivity(ClassLabel.valueOf(activityType.name().toLowerCase()));
     }
 }
