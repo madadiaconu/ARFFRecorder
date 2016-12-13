@@ -1,15 +1,10 @@
 package com.madalinadiaconu.arffrecorder.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import com.google.gson.Gson;
 import com.madalinadiaconu.arffrecorder.App;
 import com.madalinadiaconu.arffrecorder.model.ActivityType;
 import com.madalinadiaconu.arffrecorder.model.FeatureVector;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
 import weka.classifiers.trees.J48;
@@ -48,16 +43,6 @@ public class WekaClassifier {
         }
     }
 
-    private J48 loadClassifierFromSharedPrefs() throws FileNotFoundException {
-        SharedPreferences sharedPref = App.getAppContext().getSharedPreferences("classifier", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        J48 tree = gson.fromJson(sharedPref.getString("tree",null),J48.class);
-        if (tree != null) {
-            return tree;
-        }
-        throw new FileNotFoundException();
-    }
-
     public static WekaClassifier getInstance() {
         if (instance == null) {
             instance = new WekaClassifier();
@@ -71,7 +56,7 @@ public class WekaClassifier {
         instance.setValue(1, featureVector.getzMean());
         instance.setValue(2, featureVector.getAbsVar());
         instance.setDataset(trainingData);
-        double clLabel = 0;
+        double clLabel;
         try {
             clLabel = tree.classifyInstance(instance);
             instance.setClassValue(clLabel);

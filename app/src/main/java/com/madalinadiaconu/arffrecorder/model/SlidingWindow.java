@@ -39,12 +39,6 @@ public class SlidingWindow {
         return passedSize(size);
     }
 
-    public long getLastTimestamp() throws NoDataAvailableException {
-        if (data.size() > 0)
-            return data.getLast().getTimestamp();
-        throw new NoDataAvailableException();
-    }
-
     public LinkedList<AccelerometerInfo> getData() {
         return data;
     }
