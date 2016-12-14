@@ -8,6 +8,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.madalinadiaconu.arffrecorder.App;
+import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.ClassLabel;
+import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.CoordinatorClient;
 import com.madalinadiaconu.arffrecorder.util.FeatureExtractor;
 import com.madalinadiaconu.arffrecorder.util.NoDataAvailableException;
 import com.madalinadiaconu.arffrecorder.util.WekaClassifier;
@@ -31,6 +34,7 @@ public class ClassifierService extends IntentService implements SensorEventListe
     private LinkedList<SlidingWindow> slidingWindows;
     private int jumpSize;
     private int slidingWndowSize;
+    private CoordinatorClient coordinatorClient;
 
     public ClassifierService() {
         super(null);
@@ -49,6 +53,7 @@ public class ClassifierService extends IntentService implements SensorEventListe
         jumpSize = 500;
         slidingWndowSize = 1000;
         slidingWindows.add(new SlidingWindow(slidingWndowSize));
+        coordinatorClient = new CoordinatorClient("1627905");
         super.onCreate();
     }
 
@@ -62,6 +67,7 @@ public class ClassifierService extends IntentService implements SensorEventListe
     public void onDestroy() {
         isOn = false;
         sensorManager.unregisterListener(this);
+        coordinatorClient.interrupt();
         super.onDestroy();
     }
 
@@ -95,6 +101,7 @@ public class ClassifierService extends IntentService implements SensorEventListe
         if (slidingWindows.getFirst().isFull()) {
             FeatureVector featureVector = FeatureExtractor.getInstance().extractFeatures(slidingWindows.getFirst());
             ActivityType activityType = WekaClassifier.getInstance().classify(featureVector);
+            coordinatorClient.setCurrentActivity(ClassLabel.valueOf(activityType.name().toLowerCase()));
             EventBus.getDefault().post(activityType);
             slidingWindows.removeFirst();
         }

@@ -89,6 +89,5 @@ public class ARFFRecorderActivity extends AppCompatActivity{
 
     public void onEvent(ActivityType activityType) {
         currentActivity.setText(activityType.name());
-        App.getCoordinatorClient().setCurrentActivity(ClassLabel.valueOf(activityType.name().toLowerCase()));
     }
 }

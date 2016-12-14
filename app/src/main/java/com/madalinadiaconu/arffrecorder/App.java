@@ -13,18 +13,13 @@ import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.CoordinatorClient;
 public class App extends Application {
 
     private static Context context;
-    private static CoordinatorClient coordinatorClient;
 
     public App() {
         context = this;
-        coordinatorClient = new CoordinatorClient("1627905");
     }
 
     public static Context getAppContext() {
         return context;
     }
 
-    public static CoordinatorClient getCoordinatorClient() {
-        return coordinatorClient;
-    }
 }
