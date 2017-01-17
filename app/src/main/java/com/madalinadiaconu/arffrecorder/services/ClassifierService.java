@@ -7,19 +7,29 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 
 import com.madalinadiaconu.arffrecorder.App;
 import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.ClassLabel;
 import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.CoordinatorClient;
+import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.GroupStateListener;
 import com.madalinadiaconu.arffrecorder.util.FeatureExtractor;
 import com.madalinadiaconu.arffrecorder.util.NoDataAvailableException;
+import com.madalinadiaconu.arffrecorder.util.SocialAwarenessManager;
 import com.madalinadiaconu.arffrecorder.util.WekaClassifier;
 import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
 import com.madalinadiaconu.arffrecorder.model.ActivityType;
 import com.madalinadiaconu.arffrecorder.model.FeatureVector;
 import com.madalinadiaconu.arffrecorder.model.SlidingWindow;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
@@ -54,6 +64,12 @@ public class ClassifierService extends IntentService implements SensorEventListe
         slidingWndowSize = 1000;
         slidingWindows.add(new SlidingWindow(slidingWndowSize));
         coordinatorClient = new CoordinatorClient("1627905");
+        coordinatorClient.addGroupStateListener(new GroupStateListener() {
+            @Override
+            public void groupStateChanged(CoordinatorClient.UserState[] groupState) {
+                SocialAwarenessManager.getInstance().updateUserStates(groupState);
+            }
+        });
         super.onCreate();
     }
 
