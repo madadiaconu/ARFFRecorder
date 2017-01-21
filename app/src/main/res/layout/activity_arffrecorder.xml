@@ -82,6 +82,14 @@
             android:paddingTop="@dimen/y_coordinate_paddingTop"
             android:paddingLeft="@dimen/axes_padding" />
 
+        <Button
+            android:id="@+id/forward"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/forward"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
 </LinearLayout>

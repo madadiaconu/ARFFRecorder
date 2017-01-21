@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.madalinadiaconu.arffrecorder.App;
-import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.ClassLabel;
 import com.madalinadiaconu.arffrecorder.util.ARFFFileWriter;
 import com.madalinadiaconu.arffrecorder.services.ARFFRecorderService;
 import com.madalinadiaconu.arffrecorder.model.AccelerometerInfo;
@@ -62,6 +62,17 @@ public class ARFFRecorderActivity extends AppCompatActivity{
                     stopService(classifierServiceIntent);
                     ARFFFileWriter.getInstance().stopRecording();
                 }
+            }
+        });
+
+        Button forward = (Button) findViewById(R.id.forward);
+        forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(ARFFRecorderActivity.this, SocialAwarenessActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
             }
         });
     }

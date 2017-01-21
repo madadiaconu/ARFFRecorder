@@ -2,6 +2,7 @@ package com.madalinadiaconu.arffrecorder.util;
 
 import android.os.Handler;
 
+import com.madalinadiaconu.arffrecorder.model.UserRoleInfo;
 import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.ClassLabel;
 import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.CoordinatorClient;
 import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.RoomState;
@@ -14,6 +15,10 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+
+import de.greenrobot.event.EventBus;
+
+import static com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.UserRole.*;
 
 /**
  * Created by Madalina Diaconu on 17.01.17.
@@ -78,7 +83,7 @@ public class SocialAwarenessManager {
             int occurrencesStanding = Collections.frequency(classLabels, ClassLabel.standing);
             int occurrencesWalking = Collections.frequency(classLabels, ClassLabel.walking);
             if (occurrencesSitting > 0.75 * classLabels.size()) {
-                computedUserRoles.put(userId, UserRole.listener);
+                computedUserRoles.put(userId, listener);
             } else if (occurrencesWalking + occurrencesStanding > 0.8 * classLabels.size()) {
                 computedUserRoles.put(userId, UserRole.speaker);
             } else {
@@ -89,14 +94,27 @@ public class SocialAwarenessManager {
     }
 
     private void sendUserRoles() {
+        int listeners = 0, speakers = 0, transitionUsers = 0;
         for (CoordinatorClient.UserState currentUserState : lastUserStates) {
             UserRole userRole = computedUserRoles.get(currentUserState.getUserId());
             if (userRole != null) {
                 currentUserState.setRole(userRole);
+                switch (userRole) {
+                    case listener:
+                        listeners++;
+                        break;
+                    case speaker:
+                        speakers++;
+                        break;
+                    case transition:
+                        transitionUsers++;
+                        break;
+                }
             } else {
                 currentUserState.setRole(null);
             }
         }
+        EventBus.getDefault().post(new UserRoleInfo(listeners, speakers, transitionUsers));
     }
 
     private void computeRoomState() {
@@ -104,7 +122,7 @@ public class SocialAwarenessManager {
         if (computedUserRoles.values().size() == 1 && computedUserRoles.containsKey("1627905")) {
             roomState = RoomState.empty;
         } else {
-            int occurrencesListener = Collections.frequency(computedUserRoles.values(), UserRole.listener);
+            int occurrencesListener = Collections.frequency(computedUserRoles.values(), listener);
             int occurrencesSpeakers = Collections.frequency(computedUserRoles.values(), UserRole.speaker);
             if (occurrencesListener == computedUserRoles.keySet().size() - 1 &&
                     occurrencesSpeakers == 1) {
@@ -118,6 +136,7 @@ public class SocialAwarenessManager {
     private void sendRoomState() {
         if (coordinatorClient != null) {
             coordinatorClient.setRoomState(roomState);
+            EventBus.getDefault().post(roomState);
         }
     }
 
