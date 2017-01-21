@@ -9,11 +9,11 @@ import com.madalinadiaconu.arffrecorder.pcse_dd_14.actclient.UserRole;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Madalina Diaconu on 17.01.17.
@@ -45,9 +45,10 @@ public class SocialAwarenessManager {
     }
 
     private SocialAwarenessManager() {
-        userStatesToBeProcessed = new HashMap<>();
-        computedUserRoles = new HashMap<>();
+        userStatesToBeProcessed = new ConcurrentHashMap<>();
+        computedUserRoles = new ConcurrentHashMap<>();
         roomState = RoomState.transition;
+        lastUserStates = new CoordinatorClient.UserState[0];
         Timer mTimer = new Timer();
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -65,17 +66,11 @@ public class SocialAwarenessManager {
         }, 0, NOTIFY_INTERVAL);
     }
 
-    private void sendUserRoles() {
-        for (CoordinatorClient.UserState currentUserState : lastUserStates) {
-            UserRole userRole = computedUserRoles.get(currentUserState.getUserId());
-            if (userRole != null) {
-                currentUserState.setRole(userRole);
-            } else {
-                currentUserState.setRole(UserRole.transition);
-            }
-        }
-    }
-
+    /**
+     * Assumptions:
+     * - a user is a listener when he's 75% of the time sitting
+     * - a user is a speaker when he's walking and standing 80% of the time
+     */
     private void computeUserRoles() {
         for (String userId : userStatesToBeProcessed.keySet()) {
             List<ClassLabel> classLabels = userStatesToBeProcessed.get(userId);
@@ -89,11 +84,24 @@ public class SocialAwarenessManager {
             } else {
                 computedUserRoles.put(userId, UserRole.transition);
             }
+            userStatesToBeProcessed.get(userId).clear(); //erase previous states after the role has been computed
+        }
+    }
+
+    private void sendUserRoles() {
+        for (CoordinatorClient.UserState currentUserState : lastUserStates) {
+            UserRole userRole = computedUserRoles.get(currentUserState.getUserId());
+            if (userRole != null) {
+                currentUserState.setRole(userRole);
+            } else {
+                currentUserState.setRole(null);
+            }
         }
     }
 
     private void computeRoomState() {
-        if (computedUserRoles.values().size() == 0) {
+        //room is empty if no one else is in the room, current user excluded
+        if (computedUserRoles.values().size() == 1 && computedUserRoles.containsKey("1627905")) {
             roomState = RoomState.empty;
         } else {
             int occurrencesListener = Collections.frequency(computedUserRoles.values(), UserRole.listener);
@@ -113,9 +121,14 @@ public class SocialAwarenessManager {
         }
     }
 
+    /**
+     * Updates the states to be processed for each users and removes the users with an age greater than 10sec
+     * Called each time an update is available
+     * @param lastUserStates update array for each of the users
+     */
     public void updateUserStates(CoordinatorClient.UserState[] lastUserStates) {
         this.lastUserStates = lastUserStates;
-        for (CoordinatorClient.UserState userState : lastUserStates) {
+        for (CoordinatorClient.UserState userState : this.lastUserStates) {
             if (userState.getUpdateAge() < 10000) {
                 List<ClassLabel> userClassLabels = userStatesToBeProcessed.get(userState.getUserId());
                 if (userClassLabels == null) {
